@@ -11,7 +11,7 @@ import pandas as pd
 
 
 class Trainer():
-    def __init__(self, X, y, time):
+    def __init__(self, X, y):
         """
             X: pandas DataFrame
             y: pandas Series
@@ -41,7 +41,7 @@ class Trainer():
         model = LinearRegression().fit(abc, y_train)
         return model, X_test, y_test, X_train, y_train
 
-    def evaluate(self):
+    def evaluate(self, X_test, y_test):
         """evaluates the pipeline on df_test and return the RMSE"""
         model, X_test, y_test, X_train, y_train = self.run()
         pipe = self.set_pipeline().fit(X_train, y_train)
@@ -55,6 +55,5 @@ if __name__ == "__main__":
     df = clean_data(df)
     y = df.pop('fare_amount')
     X = df
-    time = ['pickup_datetime']
-    data = Trainer(X, y, time)
+    data = Trainer(X, y)
     print(data.evaluate())

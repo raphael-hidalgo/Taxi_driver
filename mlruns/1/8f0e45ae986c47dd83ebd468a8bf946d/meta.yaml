@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/raphaelhidalgo/code/raphael-hidalgo/TaxiFareModel/mlruns/1/8f0e45ae986c47dd83ebd468a8bf946d/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '1'
+lifecycle_stage: active
+name: ''
+run_id: 8f0e45ae986c47dd83ebd468a8bf946d
+run_uuid: 8f0e45ae986c47dd83ebd468a8bf946d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1629201479614
+status: 1
+tags: []
+user_id: unknown
