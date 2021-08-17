@@ -1,13 +1,15 @@
 from sklearn.pipeline import Pipeline
 from TaxiFareModel.data import get_data, clean_data
 from TaxiFareModel.encoders import DistanceTransformer, TimeFeaturesEncoder
-from TaxiFareModel.utils import haversine_vectorized, compute_rmse
+from TaxiFareModel.utils import compute_rmse
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
-import pandas as pd
+import mlflow
+from mlflow.tracking import MlflowClient
+from memoized_property import memoized_property
 
 
 class Trainer():
@@ -48,6 +50,29 @@ class Trainer():
         y = pipe.transform(X_test)
         y_pred = model.predict(y)
         return compute_rmse(y_pred, y_test)
+
+    @memoized_property
+    def mlflow_client(self):
+        mlflow.set_tracking_uri(MLFLOW_URI)
+        return MlflowClient()
+
+    @memoized_property
+    def mlflow_experiment_id(self):
+        try:
+            return self.mlflow_client.create_experiment(self.experiment_name)
+        except BaseException:
+            return self.mlflow_client.get_experiment_by_name(
+                self.experiment_name).experiment_id
+
+    @memoized_property
+    def mlflow_run(self):
+        return self.mlflow_client.create_run(self.mlflow_experiment_id)
+
+    def mlflow_log_param(self, key, value):
+        self.mlflow_client.log_param(self.mlflow_run.info.run_id, key, value)
+
+    def mlflow_log_metric(self, key, value):
+        self.mlflow_client.log_metric(self.mlflow_run.info.run_id, key, value)
 
 
 if __name__ == "__main__":
